@@ -10,8 +10,8 @@
         android:id="@+id/task_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/titlteTask"
-        android:background="@android:color/holo_blue_bright"
+        android:layout_marginTop="@dimen/titleTask"
+        android:background="@android:color/holo_green_dark"
         android:textAlignment="center"
         tools:text="" />
 

@@ -9,9 +9,8 @@ import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
 import com.steven.todo.R
 
- class TaskListAdapter(private val tasklist: List<String>) :
+ class TaskListAdapter(private val tasklist: MutableList<Task>) :
     RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
-
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(taskTitle: String) {
@@ -23,6 +22,7 @@ import com.steven.todo.R
     }
 
      override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
+         System.out.println(tasklist)
          val itemView  = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
         return  TaskViewHolder(itemView)
 
@@ -33,6 +33,7 @@ import com.steven.todo.R
      }
 
      override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-      holder.bind(tasklist[position])
+
+      holder.bind(tasklist[position].title + "\n" + tasklist[position].description)
      }
  }
