@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ class TaskListFragment : Fragment() {
         Task(id = "id_3", title = "Task 3", description = "description 3")
 
     )
+   // private val adapter = (TaskListAdapter(taskList))
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +35,13 @@ class TaskListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        // Pour une [RecyclerView] ayant l'id "recycler_view":
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = (TaskListAdapter(taskList))
+
 // Instanciation d'un objet task avec des données préremplies:
         val newTask: Task =
             Task(
@@ -40,22 +49,18 @@ class TaskListFragment : Fragment() {
                 title = "Task ${taskList.size + 1}",
                 description = "description ${taskList.size + 1}"
             )
-        val bt = view.findViewById<FloatingActionButton>(R.id.add_task)
-        bt.setOnClickListener {
+        val btCreate = view.findViewById<FloatingActionButton>(R.id.add_task)
+        btCreate.setOnClickListener {
 
             taskList.add(newTask)
-            System.out.println(taskList)
-            val adapter :TaskListAdapter = TaskListAdapter(taskList)
-            adapter.notifyDataSetChanged()
+            recyclerView.adapter?.notifyItemChanged(taskList.count() - 1)
         }
 
-        // Pour une [RecyclerView] ayant l'id "recycler_view":
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = (TaskListAdapter(taskList))
+        (recyclerView.adapter as TaskListAdapter).onDeleteTask = { task ->
+            taskList.remove(task)
+            recyclerView.adapter?.notifyItemChanged(taskList.count())
 
+        }
 
     }
-
-
 }
