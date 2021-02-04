@@ -1,17 +1,14 @@
 package com.steven.todo.tasklist
 
-import android.R.attr.data
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.ImageButton
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +18,6 @@ import com.steven.todo.R
 import com.steven.todo.network.Api
 import com.steven.todo.task.TaskActivity
 import kotlinx.coroutines.launch
-import java.io.Serializable
-import java.util.*
 
 
 class TaskListFragment : Fragment() {
@@ -33,12 +28,9 @@ class TaskListFragment : Fragment() {
 
     }
 
-    private val taskList = mutableListOf<Task>(
-    )
 
-    private val tasksRepository = TasksRepository()
-
-    private val adapter = TaskListAdapter(taskList)
+    private val viewModel: TasksViewModel by viewModels()
+    private val adapter = TaskListAdapter()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -46,12 +38,9 @@ class TaskListFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         val rooterView = inflater.inflate(R.layout.fragment_task_list, container, false)
-        tasksRepository.taskList.observe(viewLifecycleOwner) { list ->
-            if (taskList.size == 0) {
-                list.map {
-                    taskList.add(it)
-                }
-            }
+
+        viewModel.tasklist.observe(viewLifecycleOwner) { newList ->
+            adapter.submitList(newList)
         }
 
         return rooterView
@@ -62,19 +51,16 @@ class TaskListFragment : Fragment() {
         // Pour une [RecyclerView] ayant l'id "recycler_view":
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = (TaskListAdapter(taskList))
+        recyclerView.adapter = adapter
 
-        (recyclerView.adapter as TaskListAdapter).onDeleteTask = { task ->
+
+        adapter.onDeleteTask = { task ->
             lifecycleScope.launch {
-                tasksRepository.deleteTask(task)
-            }
-            tasksRepository.taskList.observe(viewLifecycleOwner) { list ->
-               taskList.removeAll(taskList)
-                list.map {
-                    taskList.add(it)
-                }
-                (recyclerView.adapter as TaskListAdapter).notifyDataSetChanged()
+                viewModel.deleteTask(task)
 
+            }
+            viewModel.tasklist.observe(viewLifecycleOwner) { list ->
+                adapter.submitList(list)
             }
         }
 
@@ -85,7 +71,7 @@ class TaskListFragment : Fragment() {
             startActivityForResult(intent, ADD_TASK_REQUEST_CODE)
         }
 
-        (recyclerView.adapter as TaskListAdapter).onEditTask = { task ->
+        adapter.onEditTask = { task ->
             val intent = Intent(activity, TaskActivity::class.java)
             intent.putExtra(KEY_EDIT, task)
 
@@ -101,20 +87,20 @@ class TaskListFragment : Fragment() {
             val task = data!!.getSerializableExtra(TaskActivity.KEY) as Task
 
             if (data!!.getSerializableExtra(TaskActivity.OLD_KEY) != null) {
+                lifecycleScope.launch {
+                    viewModel.updateTask(task)
+                    viewModel.tasklist.observe(viewLifecycleOwner) { list ->
+                        adapter.submitList(list)
+                    }
+                }
 
-                val editTask = data!!.getSerializableExtra(TaskActivity.OLD_KEY) as Task
-                val indexEditTask = taskList.indexOf(editTask)
+            } else {
+                lifecycleScope.launch {
+                    viewModel.createTask(task)
+                    viewModel.tasklist.observe(viewLifecycleOwner) { list ->
+                        adapter.submitList(list)
 
-                val removeTask = taskList[indexEditTask]
-                taskList.remove(removeTask)
-                // taskList.add(task)
-            }
-
-
-            lifecycleScope.launch {
-                tasksRepository.createTask(task)
-                tasksRepository.taskList.observe(viewLifecycleOwner) { list ->
-                    taskList.add(list[list.count()-1])
+                    }
                 }
             }
         }
@@ -129,9 +115,8 @@ class TaskListFragment : Fragment() {
             //val tasks = Api.taskWebService.getTasks().body()!!
         }
 
-        // Dans onResume()
         lifecycleScope.launch {
-            tasksRepository.refresh()
+            viewModel.refresh()
         }
     }
 

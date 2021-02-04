@@ -1,20 +1,26 @@
 package com.steven.todo.tasklist
 
-import android.content.Intent
-import android.icu.text.CaseMap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.steven.todo.R
-import com.steven.todo.task.TaskActivity
 
-class TaskListAdapter(private val tasklist: MutableList<Task>) :
-        RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
+
+object TaskDiffCallback : DiffUtil.ItemCallback<Task>(){
+    override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
+       return  oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
+      return  oldItem.title == oldItem.title && oldItem.description == newItem.description
+    }
+}
+
+class TaskListAdapter: androidx.recyclerview.widget.ListAdapter<Task ,TaskListAdapter.TaskViewHolder> (TaskDiffCallback) {
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(task: Task, taskTitle: String) {
@@ -31,11 +37,8 @@ class TaskListAdapter(private val tasklist: MutableList<Task>) :
                 btEdit.setOnClickListener {
                     onEditTask?.invoke(task)
 
-
                 }
-
             }
-
         }
     }
 
@@ -46,16 +49,13 @@ class TaskListAdapter(private val tasklist: MutableList<Task>) :
 
     }
 
-    override fun getItemCount(): Int {
-        return tasklist.size
-    }
-
     var onDeleteTask: ((Task) -> Unit)? = null
 
     var onEditTask: ((Task) -> Unit)? = null
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(tasklist[position], tasklist[position].title + '\n' + tasklist[position].description)
+
+        holder.bind(getItem(position), getItem(position).title + '\n' + getItem(position).description)
     }
 
 
