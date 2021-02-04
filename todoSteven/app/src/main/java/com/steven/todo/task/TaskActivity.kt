@@ -9,6 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.steven.todo.R
 import com.steven.todo.tasklist.Task
 import com.steven.todo.tasklist.TaskListFragment
+import java.io.Serializable
 import java.util.*
 
 
@@ -40,13 +41,13 @@ class TaskActivity : AppCompatActivity() {
         confirmButton.setOnClickListener {
             if (task == null) {
                 val newTask = Task(id = UUID.randomUUID().toString(), title = title.text.toString(), description = description.text.toString())
-                intent.putExtra(KEY, newTask)
+                intent.putExtra(KEY, newTask )
 
             } else  {
                 task as Task
                 val newTask = Task(id = task.id, title = title.text.toString(), description = description.text.toString())
                 intent.putExtra(KEY, newTask)
-                intent.putExtra(OLD_KEY,task)
+                intent.putExtra(OLD_KEY,task )
 
             }
 
