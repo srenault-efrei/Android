@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context=".MainActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:civ_border_width="3dp"
+        app:civ_border_color="#3F51B5"
+
+        />
+
+    <Button
+        android:id="@+id/upload_image_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="Choisir une Image" />
+
+    <Button
+        android:id="@+id/take_picture_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="Prendre une photo" />
+
+    <EditText
+        android:id="@+id/user_firstname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/Firstname"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/user_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/Email"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/valid_edit_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
+        android:text="@string/Valider" />
+</LinearLayout>

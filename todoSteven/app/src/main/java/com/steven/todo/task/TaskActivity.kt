@@ -14,15 +14,11 @@ import java.util.*
 
 
 class TaskActivity : AppCompatActivity() {
-
-
     companion object {
         const val KEY = "reply_key"
         const val OLD_KEY = "reply_old_key"
 
     }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task2)
@@ -31,32 +27,32 @@ class TaskActivity : AppCompatActivity() {
         val title = findViewById<EditText>(R.id.editText_add_title)
         val description = findViewById<EditText>(R.id.editText_add_description)
 
-
         if (task != null) {
             task as Task
             title.setText(task.title)
             description.setText((task.description))
         }
-
         confirmButton.setOnClickListener {
             if (task == null) {
-                val newTask = Task(id = UUID.randomUUID().toString(), title = title.text.toString(), description = description.text.toString())
-                intent.putExtra(KEY, newTask )
-
-            } else  {
-                task as Task
-                val newTask = Task(id = task.id, title = title.text.toString(), description = description.text.toString())
+                val newTask = Task(
+                    id = UUID.randomUUID().toString(),
+                    title = title.text.toString(),
+                    description = description.text.toString()
+                )
                 intent.putExtra(KEY, newTask)
-                intent.putExtra(OLD_KEY,task )
 
+            } else {
+                task as Task
+                val newTask = Task(
+                    id = task.id,
+                    title = title.text.toString(),
+                    description = description.text.toString()
+                )
+                intent.putExtra(KEY, newTask)
+                intent.putExtra(OLD_KEY, task)
             }
-
             setResult(RESULT_OK, intent)
             finish()
-
         }
-
     }
-
-
 }

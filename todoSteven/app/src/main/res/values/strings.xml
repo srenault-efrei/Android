@@ -5,4 +5,8 @@
     <string name="edit" />
     <string name="valider">valider</string>
     <string name="user">user</string>
+    <string name="Firstname">Firstname</string>
+    <string name="email" />
+    <string name="Email">Email</string>
+    <string name="Valider">Valider</string>
 </resources>
