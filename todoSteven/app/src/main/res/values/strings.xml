@@ -9,4 +9,10 @@
     <string name="email" />
     <string name="Email">Email</string>
     <string name="Valider">Valider</string>
+    <string name="add_task">add_task</string>
+    <string name="deleteTask">deleteTask</string>
+    <string name="edit_task" />
+    <string name="Name">Name</string>
+    <string name="take">Prendre une photo</string>
+    <string name="Choisir">Choisir une Image</string>
 </resources>
